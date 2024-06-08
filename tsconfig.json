@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		"noEmit": true,
+		"strict": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"noImplicitAny": true,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+		"noUnusedParameters": true,
+		"moduleResolution": "node"
+	},
+	"include": [
+		"netlify/**/*.ts",
+		"tsconfig.json",
+		".eslintrc.js"
+	],
+	"exclude": [
+		"node_modules",
+	]
+}
