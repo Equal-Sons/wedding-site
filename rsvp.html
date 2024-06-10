@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RSVP Search</title>
+  <link href="public/styles.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .results {
+      margin-top: 20px;
+    }
+
+    .result-item {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+  <div class="card w-full max-w-lg shadow-lg bg-white p-8">
+    <h1 class="text-2xl mb-4">Search Your RSVP</h1>
+
+    <form id="search-form" class="form-control">
+      <label for="name" class="label">
+        <span class="label-text">Enter Your Name:</span>
+      </label>
+      <input type="text" id="name" name="name" class="input input-bordered mb-4">
+      <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    <div class="results mt-4" id="results"></div>
+		<div id="selection-details"></div>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+
+</html>

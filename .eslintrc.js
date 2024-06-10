@@ -21,6 +21,8 @@ module.exports = {
 		'no-shadow': 2,
 		'object-curly-spacing': ['error', 'always'],
 	},
-	ignorePatterns: [],
+	ignorePatterns: [
+		'js/**/*.js',
+	],
 };
 
