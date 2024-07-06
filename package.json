@@ -6,7 +6,7 @@
 	"scripts": {
 		"build:css": "tailwindcss build css/tailwind.css -o public/styles.css -w",
 		"dev": "netlify dev",
-		"scrape": "wget -r -l 1 -p -k -E . jayandash.my.canva.site/",
+		"scrape": "wget -r -l 1 -p -k -E --no-host-directories jayandash.my.canva.site/",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"author": "",
