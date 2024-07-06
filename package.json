@@ -4,14 +4,17 @@
 	"description": "Justin and Ashleys Wedding Website",
 	"main": "index.js",
 	"scripts": {
-		"build:css": "tailwindcss build css/tailwind.css -o public/styles.css",
+		"build:css": "tailwindcss build css/tailwind.css -o public/styles.css -w",
+		"dev": "netlify dev",
+		"scrape": "wget -r -l 1 -p -k -E . jayandash.my.canva.site/",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
 		"@netlify/functions": "^2.7.0",
-		"googleapis": "^140.0.0"
+		"googleapis": "^140.0.0",
+		"ics": "^3.7.6"
 	},
 	"devDependencies": {
 		"@types/node": "^20.14.2",

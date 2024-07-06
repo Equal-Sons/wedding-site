@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="emerald">
 
 <head>
   <meta charset="UTF-8">
@@ -21,21 +21,26 @@
   </style>
 </head>
 
-<body class="bg-gray-100 flex justify-center items-center min-h-screen">
-  <div class="card w-full max-w-lg shadow-lg bg-white p-8">
-    <h1 class="text-2xl mb-4">Search Your RSVP</h1>
+<body class="bg-gray-100 min-h-screen">
+	<nav class="p-8">
+		<a href="index.html" class="btn btn-outline">Back</a>
+	</nav>
+	<div class="flex flex-col justify-center items-center">
 
-    <form id="search-form" class="form-control">
-      <label for="name" class="label">
-        <span class="label-text">Enter Your Name:</span>
-      </label>
-      <input type="text" id="name" name="name" class="input input-bordered mb-4">
-      <button type="submit" class="btn btn-primary">Search</button>
-    </form>
+		<div class="card w-full max-w-lg shadow-lg bg-white p-8 mb-4">
+			<h1 class="text-2xl mb-4 text-center">Search Your RSVP</h1>
 
-    <div class="results mt-4" id="results"></div>
-		<div id="selection-details"></div>
-  </div>
+			<form id="search-form" class="form-control">
+				<label for="name" class="label">
+					<span class="label-text">Enter Your Name:</span>
+				</label>
+				<input type="text" id="name" name="name" class="input input-bordered mb-4">
+				<button type="submit" class="btn btn-primary">Search</button>
+			</form>
+		</div>
+	</div>
+	<div id="results" class="flex flex-col justify-center items-center"></div>
+	<div id="selection-details" class="flex flex-col justify-center items-center"></div>
 
   <script src="js/script.js"></script>
 </body>

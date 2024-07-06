@@ -1,0 +1,19 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+CALSCALE:GREGORIAN
+PRODID:adamgibbons/ics
+METHOD:PUBLISH
+X-PUBLISHED-TTL:PT1H
+BEGIN:VEVENT
+UID:VPOkIelkZqf70UjdaU5wT
+SUMMARY:Justin and Ashley's Wedding Dinner
+DTSTAMP:20240701T160840Z
+DTSTART:20241121T210000Z
+DESCRIPTION:An intimate dinner with close friends and family. Please come d
+	ressed to impress. We will have a photographer on site to capture the memo
+	ries.
+URL:https://jayandash.com
+LOCATION:Church Hill Overlook 200 N 22nd St\, Richmond\, VA 23223
+DURATION:PT4H
+END:VEVENT
+END:VCALENDAR
