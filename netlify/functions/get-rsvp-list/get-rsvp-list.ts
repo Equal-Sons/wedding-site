@@ -59,7 +59,7 @@ async function getSheetData(): Promise<RsvpDataResponse[]> {
 	}));
 }
 
-export const handler: Handler = async (event, context) => {
+export const handler: Handler = async () => {
 	try {
 		const data = await getSheetData();
 

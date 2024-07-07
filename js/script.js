@@ -112,13 +112,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	window.submitRsvp = async (guestName, guestPlusName, canGuestHavePlusOne, isGuestInvitedToDinner) => {
 		const emailGuest = document.getElementById(`email-${guestName}`).value;
-		let emailPlusGuest = '';
+		let emailPlusGuest = null;
 		if (guestPlusName) {
 			emailPlusGuest = document.getElementById(`email-${guestPlusName}`).value;
 		}
-		let plusOneName = '';
-		let plusOneEmail = '';
-		if (!guestPlusName && canGuestHavePlusOne) {
+		let plusOneName = null;
+		let plusOneEmail = null;
+
+		console.log(!guestPlusName.length, canGuestHavePlusOne)
+		if (!guestPlusName.length && canGuestHavePlusOne) {
+			// Reset guest plus name
+			guestPlusName = null;
 			plusOneName = document.getElementById('plus-one-name').value;
 			plusOneEmail = document.getElementById('plus-one-email').value;
 		}
@@ -127,22 +131,23 @@ document.addEventListener('DOMContentLoaded', () => {
 			attendDinner = document.getElementById('attend-dinner').checked;
 		}
 
-		console.log(emailGuest, emailPlusGuest, plusOneEmail, plusOneName, attendDinner)
 		// Placeholder for handling the submission
 		try {
-			const res = await fetch('/.netlify/functions/submit-rsvp', {
+			const body = {
+				firstGuest: {
+					name: guestName,
+					email: emailGuest
+				},
+				secondGuest: {
+					name: guestPlusName ?? plusOneName ?? '',
+					email: emailPlusGuest ?? plusOneEmail ?? ''
+				},
+				willAttendDinner: attendDinner
+			};
+
+			await fetch('/.netlify/functions/submit-rsvp', {
 				method: 'POST',
-				body: JSON.stringify({
-					firstGuest: {
-						name: guestName,
-						email: emailGuest
-					},
-					secondGuest: {
-						name: guestPlusName ?? plusOneName ?? '',
-						email: emailPlusGuest ?? plusOneEmail ?? ''
-					},
-					willAttendDinner: attendDinner
-				})
+				body: JSON.stringify(body)
 			});
 
 		} catch (error) {
