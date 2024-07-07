@@ -8,7 +8,7 @@ export const handler: Handler = async (event, context) => {
 			dinner: {
 				title: 'Justin and Ashley\'s Wedding Dinner',
 				description: 'An intimate dinner with close friends and family. Please come dressed to impress. We will have a photographer on site to capture the memories.',
-				location: 'Church Hill Overlook 200 N 22nd St, Richmond, VA 23223',
+				location: 'Blue Atlas 1000 Carlisle Ave Unit 200, Richmond, VA 23231',
 				startArray: [2024, 11, 21, 16],
 				duration: { hours: 4 },
 				startString: '20241121T210000Z', // in UTC (add 5 hours for EST)
