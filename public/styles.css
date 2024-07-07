@@ -514,32 +514,32 @@ html {
 
 :root {
   color-scheme: light;
-  --b2: 93% 0 0;
-  --b3: 86% 0 0;
-  --in: 72.06% 0.191 231.6;
-  --su: 64.8% 0.150 160;
-  --wa: 84.71% 0.199 83.87;
-  --er: 71.76% 0.221 22.18;
-  --inc: 0% 0 0;
-  --suc: 0% 0 0;
-  --wac: 0% 0 0;
-  --erc: 0% 0 0;
-  --rounded-box: 1rem;
-  --rounded-btn: 0.5rem;
-  --rounded-badge: 1.9rem;
+  --inc: 15.908% 0.0206 205.9;
+  --suc: 18.026% 0.0306 164.14;
+  --wac: 17.674% 0.027 79.94;
+  --erc: 15.732% 0.03 28.47;
   --border-btn: 1px;
   --tab-border: 1px;
-  --tab-radius: 0.5rem;
-  --p: 76.6626% 0.135433 153.450024;
-  --pc: 33.3872% 0.040618 162.240129;
-  --s: 61.3028% 0.202368 261.294233;
+  --p: 15.9066% 0 0;
+  --pc: 100% 0 0;
+  --s: 21.455% 0.001566 17.278957;
   --sc: 100% 0 0;
-  --a: 72.7725% 0.149783 33.200363;
-  --ac: 0% 0 0;
-  --n: 35.5192% 0.032071 262.988584;
-  --nc: 98.4625% 0.001706 247.838921;
+  --a: 26.8618% 0 0;
+  --ac: 100% 0 0;
+  --n: 0% 0 0;
+  --nc: 100% 0 0;
   --b1: 100% 0 0;
-  --bc: 35.5192% 0.032071 262.988584;
+  --b2: 96.1151% 0 0;
+  --b3: 92.268% 0.001082 17.17934;
+  --bc: 0% 0 0;
+  --in: 79.54% 0.103 205.9;
+  --su: 90.13% 0.153 164.14;
+  --wa: 88.37% 0.135 79.94;
+  --er: 78.66% 0.15 28.47;
+  --rounded-box: 0.25rem;
+  --rounded-btn: 0.125rem;
+  --rounded-badge: 0.125rem;
+  --tab-radius: 0.125rem;
   --animation-btn: 0;
   --animation-input: 0;
   --btn-focus-scale: 1;
@@ -1136,11 +1136,27 @@ html {
   background-color: var(--fallback-b1,oklch(var(--b1)/var(--tw-bg-opacity)));
 }
 
+.alert-success {
+  border-color: var(--fallback-su,oklch(var(--su)/0.2));
+  --tw-text-opacity: 1;
+  color: var(--fallback-suc,oklch(var(--suc)/var(--tw-text-opacity)));
+  --alert-bg: var(--fallback-su,oklch(var(--su)/1));
+  --alert-bg-mix: var(--fallback-b1,oklch(var(--b1)/1));
+}
+
 .alert-warning {
   border-color: var(--fallback-wa,oklch(var(--wa)/0.2));
   --tw-text-opacity: 1;
   color: var(--fallback-wac,oklch(var(--wac)/var(--tw-text-opacity)));
   --alert-bg: var(--fallback-wa,oklch(var(--wa)/1));
+  --alert-bg-mix: var(--fallback-b1,oklch(var(--b1)/1));
+}
+
+.alert-error {
+  border-color: var(--fallback-er,oklch(var(--er)/0.2));
+  --tw-text-opacity: 1;
+  color: var(--fallback-erc,oklch(var(--erc)/var(--tw-text-opacity)));
+  --alert-bg: var(--fallback-er,oklch(var(--er)/1));
   --alert-bg-mix: var(--fallback-b1,oklch(var(--b1)/1));
 }
 

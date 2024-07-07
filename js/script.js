@@ -1,3 +1,9 @@
+function fetchRsvpList() {
+	return fetch('/.netlify/functions/get-rsvp-list')
+		.then(response => response.json())
+		.then(data => data.data);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 	let rsvpList = [];
 
@@ -119,7 +125,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		let plusOneName = null;
 		let plusOneEmail = null;
 
-		console.log(!guestPlusName.length, canGuestHavePlusOne)
 		if (!guestPlusName.length && canGuestHavePlusOne) {
 			// Reset guest plus name
 			guestPlusName = null;
@@ -131,7 +136,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			attendDinner = document.getElementById('attend-dinner').checked;
 		}
 
-		// Placeholder for handling the submission
 		try {
 			const body = {
 				firstGuest: {
@@ -145,19 +149,38 @@ document.addEventListener('DOMContentLoaded', () => {
 				willAttendDinner: attendDinner
 			};
 
-			await fetch('/.netlify/functions/submit-rsvp', {
+			const response = await fetch('/.netlify/functions/submit-rsvp', {
 				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(body)
 			});
 
+			if (response.ok) {
+				showSuccessMessage();
+			} else {
+				showErrorMessage('Failed to submit RSVP. Please try again.');
+			}
 		} catch (error) {
+			showErrorMessage('An error occurred while submitting your RSVP. Please try again.');
 			console.error(error);
 		}
 	};
-});
 
-function fetchRsvpList() {
-	return fetch('/.netlify/functions/get-rsvp-list')
-		.then(response => response.json())
-		.then(data => data.data);
-}
+	function showSuccessMessage() {
+		selectionDetails.innerHTML = `
+					<div class="flex flex-col p-8 max-w-lg alert alert-success text-center">
+							<p class="text-lg"><strong>Thank you!</strong> Your RSVP has been successfully submitted.</p>
+							<p>If you subscribed, you will receive a confirmation email shortly.</p>
+							<a href="index.html" class="btn btn-outline w-full">Back</a>
+					</div>
+			`;
+	}
+
+	function showErrorMessage(message) {
+		selectionDetails.innerHTML = `
+					<div class="max-w-lg alert alert-error text-center">
+							<p class="text-lg"><strong>Error:</strong> ${message}</p>
+					</div>
+			`;
+	}
+});
