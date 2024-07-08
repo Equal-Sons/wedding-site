@@ -9,7 +9,8 @@ export interface RsvpSubmitRequest {
 		name: string;
 		email: string;
 	};
-	willAttendDinner?: boolean;
+	willAttendDinner: boolean;
+	willAttendParty: boolean;
 }
 
 export interface RsvpSubmitResponse {
@@ -19,6 +20,11 @@ export interface RsvpSubmitResponse {
 
 export const handler: Handler = async (event) => {
 	try {
+		return {
+			statusCode: 200,
+			body: JSON.stringify({ okay: true }),
+		};
+
 		const requestBody = JSON.parse(event.body ?? '{}') as RsvpSubmitRequest;
 
 		const schema = Joi.object({
@@ -30,6 +36,7 @@ export const handler: Handler = async (event) => {
 				name: Joi.string().allow(''),
 				email: Joi.string().email().allow(''),
 			}),
+			willAttendParty: Joi.boolean(),
 			willAttendDinner: Joi.boolean(),
 		});
 
@@ -55,10 +62,15 @@ export const handler: Handler = async (event) => {
 				external_id: requestBody.firstGuest.name,
 				...(first_name && { first_name }),
 				...(last_name && { last_name }),
+				custom_fields: {
+					is_attending_party: requestBody.willAttendParty ? 'Yes' : 'No',
+					is_attending_dinner: requestBody.willAttendDinner ? 'Yes' : 'No',
+				},
 			}],
 		};
 
-		if (requestBody.secondGuest?.email ?? requestBody.secondGuest?.name) {
+		// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+		if (requestBody.secondGuest?.email?.length || requestBody.secondGuest?.name?.length) {
 			const guest_first_name = requestBody.secondGuest?.name?.split(' ')[0];
 			const guest_last_name = requestBody.secondGuest?.name?.split(' ')[1];
 
@@ -67,6 +79,10 @@ export const handler: Handler = async (event) => {
 				external_id: requestBody.secondGuest?.name,
 				...(guest_first_name && { first_name: guest_first_name }),
 				...(guest_last_name && { last_name: guest_last_name }),
+				custom_fields: {
+					is_attending_party: requestBody.willAttendParty ? 'Yes' : 'No',
+					is_attending_dinner: requestBody.willAttendDinner ? 'Yes' : 'No',
+				},
 			});
 		}
 
@@ -74,7 +90,9 @@ export const handler: Handler = async (event) => {
 			mailData.list_ids.push('d3579498-2f96-40c1-a8c4-045e9a80b0b1');
 		}
 
-		await fetch('https://api.sendgrid.com/v3/marketing/contacts', {
+		console.log(JSON.stringify(mailData, null, 2));
+
+		const res = await fetch('https://api.sendgrid.com/v3/marketing/contacts', {
 			method: 'PUT',
 			headers: {
 				Authorization: `Bearer ${process.env.SENDGRID_API_KEY}`,
@@ -82,6 +100,10 @@ export const handler: Handler = async (event) => {
 			},
 			body: JSON.stringify(mailData),
 		});
+
+		if (!res.ok) {
+			throw new Error(`Failed to send email: ${res.statusText}`);
+		}
 
 		return {
 			statusCode: 200,

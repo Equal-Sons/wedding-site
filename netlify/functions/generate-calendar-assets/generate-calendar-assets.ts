@@ -6,8 +6,8 @@ export const handler: Handler = async (event, context) => {
 		const SITE_URL = 'https://jayandash.com';
 		const eventDetails = {
 			dinner: {
-				title: 'Justin and Ashley\'s Wedding Dinner',
-				description: 'An intimate dinner with close friends and family. Please come dressed to impress. We will have a photographer on site to capture the memories.',
+				title: 'Ashley and Justin\'s Wedding Dinner',
+				description: 'Please look at our website for more details like hotel block booking link, wedding attire, and our registry.',
 				location: 'Blue Atlas 1000 Carlisle Ave Unit 200, Richmond, VA 23231',
 				startArray: [2024, 11, 21, 16],
 				duration: { hours: 4 },
@@ -15,8 +15,8 @@ export const handler: Handler = async (event, context) => {
 				endString: '20241122T010000Z',
 			},
 			reception: {
-				title: 'Justin and Ashley\'s Wedding Reception',
-				description: 'Join us for our celebration of love and commitment!',
+				title: 'Ashley and Justin\'s Wedding Party',
+				description: 'come to our dinner',
 				location: 'Triple Crossing Brewery 5203 Hatcher St, Richmond, VA 23231',
 				startArray: [2024, 11, 22, 17],
 				duration: { hours: 5 },

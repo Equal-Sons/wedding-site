@@ -1,48 +1,286 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="lofi">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RSVP Search</title>
   <link href="public/styles.css" rel="stylesheet">
+  <script src="https://unpkg.com/alpinejs@3.7.0" defer></script>
   <style>
     body {
       font-family: Arial, sans-serif;
     }
-
     .results {
       margin-top: 20px;
     }
-
     .result-item {
       margin-bottom: 10px;
     }
   </style>
 </head>
-
 <body class="bg-gray-100 min-h-screen">
+  <!-- Navigation -->
 	<nav class="p-8">
-		<a href="index.html" class="btn btn-outline">Back</a>
-	</nav>
-	<div class="flex flex-col justify-center items-center">
+    <a href="index.html" class="btn btn-outline">Back</a>
+  </nav>
 
-		<div class="card w-full max-w-lg shadow-lg bg-white p-8 mb-4">
-			<h1 class="text-2xl mb-4 text-center">Search Your RSVP</h1>
-
-			<form id="search-form" class="form-control">
+	<!-- Main Content -->
+	<div class="container mx-auto flex flex-col" x-data="rsvpComponent" x-init="initialize">
+		<!-- Error Card -->
+		<template x-if="errorMessage">
+			<p class="max-w-xl mx-auto alert alert-warning text-center mb-4" x-text="(errorMessage)"></p>
+		</template>
+		<!-- Search Card -->
+		<div class="card w-full max-w-xl shadow-lg mx-auto bg-white p-8 mb-4">
+			<h1 class="text-2xl mb-4 text-center">Search For Your RSVP</h1>
+			<form @submit.prevent="searchAndDisplayResults(query, true)" class="form-control">
 				<label for="name" class="label">
 					<span class="label-text">Enter Your Name:</span>
+					<span class="label-text-alt text-red-600">Required</span>
 				</label>
-				<input type="text" id="name" name="name" class="input input-bordered mb-4">
-				<button type="submit" class="btn btn-primary">Search</button>
+				<input type="text" id="name" name="name" class="input input-bordered mb-4" x-model="query" @input.debounce.100="searchAndDisplayResults(query, false)">
+				<button type="submit" class="btn btn-outline">Search</button>
 			</form>
 		</div>
+
+		<!-- Search Results Card -->
+		<div 
+			id="results" 
+			x-show="query.length > 3 && selected === null" 
+			x-transition
+			class="flex flex-col justify-center items-center" 
+		>
+			<template x-for="result in matches" :key="result.guestName">
+				<div class="card w-full max-w-xl shadow-lg bg-white p-8 mb-4">
+					<div class="flex items-center justify-between">
+						<p class="text-lg font-bold" x-text="result.guestName"></p>
+						<button class="btn btn-outline mt-2" @click="selectGuest(result)">Select</button>
+					</div>
+				</div>
+			</template>
+		</div>
+
+		<!-- Selection Details Card -->
+		<div id="selection-details" class="flex flex-col justify-center items-center" x-show="selected !== null">
+			<div class="card w-full max-w-xl shadow-lg bg-white p-8 mb-4">
+				<template x-if="selected">
+					<div>
+						<h2 
+							class="text-xl text-center mb-2" 
+							x-text="'Welcome, ' + (selected?.guestName ? selected.guestName : '') + (selected?.guestPlusName ? ' & ' + selected.guestPlusName : '') + '!'"
+						></h2>
+						<p class="text-center mb-6 italic">
+							You have been invited to join the wedding party for Ashley and Justin on 
+							<span class="underline">Friday November 22, 2024 at 5PM EST</span>. 
+						</p>
+						<p class="mb-6 text-center">
+							Please complete the form below to RSVP.
+						</p>
+						<hr class="mb-6"/>
+					<form class="form-control" @submit.prevent="submitRsvp()">
+						<label for="partyRsvp" class="label">
+							<span class="label-text">Will you be attending the wedding party?</span>
+							<span class="label-text-alt text-red-600">Required</span>
+						</label>
+						<select x-model="partyRsvp" class="select select-primary w-full">
+							<option value="null" disabled selected>Choose Yes or No</option>
+							<option value=true>Yes</option>
+							<option value=false>No</option>
+						</select>
+
+						<template x-if="(partyRsvp === 'true' && selected.isGuestInvitedToDinner)">
+							<div>
+								<div class="divider mt-10 mb-8">A Special Invitation</div>
+								<p class="mb-6">As special guests you're invited to our welcome dinner the night prior on 
+									<span class="underline">Thursday, November 21 at 5PM EST.</span> 
+									This event is private and by invite only.
+								</p>
+								<label for="partyRsvp" class="label">
+									<span class="label-text">Will you be attending our private dinner?</span>
+									<span class="label-text-alt text-red-600">Required</span>
+								</label>
+								<select x-model="dinnerRsvp" class="select select-primary w-full">
+									<option value="null" disabled selected>Choose Yes or No</option>
+									<option value=true>Yes</option>
+									<option value=false>No</option>
+								</select>
+							</div>
+						</template>
+
+						<template x-if="(partyRsvp === 'true')">
+							<div>
+								<hr class="mb-6 mt-10"/>
+								<p class="mb-6">You can receive notifications of updates about the wedding and get calendar reminders by entering your email address below.</p>
+								<label class="label mt-2">
+									<span class="label-text" x-text="'Email for ' + (selected?.guestName ? selected.guestName : '')"></span>
+								</label>
+								<input type="email" class="input input-bordered w-full mb-4" x-model="selected.email">
+								<template x-if="selected.guestPlusName">
+									<div>
+										<label class="label mt-2">
+											<span class="label-text" x-text="'Email for ' + (selected?.guestPlusName ? selected.guestPlusName : '')"></span>
+										</label>
+										<input type="email" class="input input-bordered w-full mb-4" x-model="selected.plusEmail">
+									</div>
+								</template>
+								<template x-if="!selected.guestPlusName && selected.canGuestHavePlusOne">
+									<div>
+										<label class="label mt-2">
+											<span class="label-text">Name for Plus One:</span>
+										</label>
+										<input type="text" class="input input-bordered w-full mb-4" x-model="selected.plusOneName">
+										<label class="label mt-2">
+											<span class="label-text">Email for Plus One:</span>
+										</label>
+										<input type="email" class="input input-bordered w-full mb-4" x-model="selected.plusOneEmail">
+									</div>
+								</template>
+							</div>
+						</template>
+
+						<template x-if="requestError">
+							<div class="alert alert-error mt-4">
+								<p x-text="requestError"></p>
+							</div>
+						</template>
+
+						<!-- This is the bare minimum we need to submit the form -->
+						<template x-if="(partyRsvp !== null)">
+							<button 
+								type="submit"
+								class="btn btn-outline mt-4"
+								:disabled="partyRsvp === 'true' && selected.isGuestInvitedToDinner && dinnerRsvp === null"
+							>
+								Submit RSVP
+							</button>
+						</template>
+					</form>
+					</div>
+				</template>
+			</div>
+		</div>
+
+		<template x-if="requestSuccess">
+			<div class="alert alert-success mt-4 max-w-xl mx-auto">
+				<p x-text="requestSuccess"></p>
+			</div>
+		</template>
 	</div>
-	<div id="results" class="flex flex-col justify-center items-center"></div>
-	<div id="selection-details" class="flex flex-col justify-center items-center"></div>
 
-  <script src="js/script.js"></script>
+  <script>
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('rsvpComponent', () => ({
+        rsvpList: [],
+        matches: [],
+        query: '',
+        selected: null,
+				errorMessage: null,
+				partyRsvp: null,
+				dinnerRsvp: null,
+				requestError: null,
+				requestSuccess: null,
+
+        async initialize() {
+          const response = await fetch('/.netlify/functions/get-rsvp-list');
+          const json = await response.json();
+          this.rsvpList = json.data;
+        },
+
+        searchAndDisplayResults(name, isButtonClick) {
+					this.errorMessage = null;
+					this.selected = null;
+					this.requestSuccess = null;
+
+          const query = name.toLowerCase().trim();
+
+          if (query.length > 3 || isButtonClick) {
+            this.matches = this.rsvpList.filter(rsvp =>
+              rsvp.guestName.toLowerCase().includes(query) ||
+              (rsvp.guestPlusName && rsvp.guestPlusName.toLowerCase().includes(query))
+            );
+
+						if (this.matches.length === 0) {
+							this.errorMessage = "Sorry it doesn\'t appear you\'re on the RSVP list. If you believe this is a mistake please contact Ashley or Justin directly.";
+						}
+          } else {
+            this.matches = [];
+          }
+        },
+
+        selectGuest(result) {
+					this.selected = {
+						guestName: result.guestName,
+						guestPlusName: result.guestPlusName ?? '',
+						canGuestHavePlusOne: result.canGuestHavePlusOne,
+						isGuestInvitedToDinner: result.isGuestInvitedToDinner,
+						email: '',
+						plusEmail: '',
+						plusOneName: '',
+						plusOneEmail: '',
+						attendDinner: false
+					};
+				},
+
+        async submitRsvp() {
+					this.requestError = null;
+
+          const { 
+						guestName, 
+						guestPlusName, 
+						email, 
+						plusEmail, 
+						plusOneName, 
+						plusOneEmail, 
+						attendDinner 
+					} = this.selected;
+
+          try {
+            const body = {
+              firstGuest: {
+                name: guestName,
+                email
+              },
+              secondGuest: {
+                name: guestPlusName || plusOneName || '',
+                email: plusEmail || plusOneEmail || ''
+              },
+							willAttendParty: this.partyRsvp === 'true',
+              willAttendDinner: this.dinnerRsvp === 'true',
+            };
+
+						console.log(body)
+
+            const response = await fetch('/.netlify/functions/submit-rsvp', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(body)
+            });
+
+            if (response.ok) {
+              this.showSuccessMessage();
+            } else {
+              this.showErrorMessage('Failed to submit RSVP. Please try again.');
+            }
+          } catch (error) {
+            this.showErrorMessage('An error occurred while submitting your RSVP. Please try again.');
+            console.error(error);
+          }
+        },
+
+        showSuccessMessage() {
+          this.selected = null;
+          this.query = '';
+          this.matches = [];
+					this.partyRsvp = null,
+					this.dinnerRsvp = null,
+          this.requestSuccess = 'Thank you! Your RSVP has been successfully submitted.';
+        },
+
+        showErrorMessage(message) {
+          this.requestError = message;
+        }
+      }));
+    });
+  </script>
 </body>
-
 </html>
