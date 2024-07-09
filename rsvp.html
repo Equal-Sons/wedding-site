@@ -6,6 +6,7 @@
   <title>RSVP Search</title>
   <link href="public/styles.css" rel="stylesheet">
   <script src="https://unpkg.com/alpinejs@3.7.0" defer></script>
+	<script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -160,15 +161,15 @@
 			</div>
 		</div>
 
-		<template x-if="requestSuccess">
-			<div class="alert alert-success mt-4 max-w-xl mx-auto">
-				<p x-text="requestSuccess"></p>
-			</div>
+		<template x-if="requestSuccessMessage">
+			<p class="max-w-xl mx-auto alert alert-success text-center mb-4 block" x-text="(requestSuccessMessage)"></p>
 		</template>
 	</div>
 
   <script>
     document.addEventListener('alpine:init', () => {
+			const jsConfetti = new JSConfetti();
+
       Alpine.data('rsvpComponent', () => ({
         rsvpList: [],
         matches: [],
@@ -178,7 +179,7 @@
 				partyRsvp: null,
 				dinnerRsvp: null,
 				requestError: null,
-				requestSuccess: null,
+				requestSuccessMessage: null,
 
         async initialize() {
           const response = await fetch('/.netlify/functions/get-rsvp-list');
@@ -189,7 +190,7 @@
         searchAndDisplayResults(name, isButtonClick) {
 					this.errorMessage = null;
 					this.selected = null;
-					this.requestSuccess = null;
+					this.requestSuccessMessage = null;
 
           const query = name.toLowerCase().trim();
 
@@ -257,6 +258,10 @@
             });
 
             if (response.ok) {
+							if (this.partyRsvp === 'true') {
+								jsConfetti.addConfetti({ confettiNumber: 1000 });
+							}
+							// this next method will also reset the state
               this.showSuccessMessage();
             } else {
               this.showErrorMessage('Failed to submit RSVP. Please try again.');
@@ -273,7 +278,7 @@
           this.matches = [];
 					this.partyRsvp = null,
 					this.dinnerRsvp = null,
-          this.requestSuccess = 'Thank you! Your RSVP has been successfully submitted.';
+          this.requestSuccessMessage = 'Thank you! Your RSVP has been successfully submitted.';
         },
 
         showErrorMessage(message) {

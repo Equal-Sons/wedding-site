@@ -20,6 +20,10 @@ export interface RsvpSubmitResponse {
 
 export const handler: Handler = async (event) => {
 	try {
+		return {
+			statusCode: 200,
+			body: JSON.stringify({ okay: true }),
+		};
 		const requestBody = JSON.parse(event.body ?? '{}') as RsvpSubmitRequest;
 
 		const schema = Joi.object({

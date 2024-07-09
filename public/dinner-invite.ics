@@ -5,13 +5,12 @@ PRODID:adamgibbons/ics
 METHOD:PUBLISH
 X-PUBLISHED-TTL:PT1H
 BEGIN:VEVENT
-UID:VPOkIelkZqf70UjdaU5wT
-SUMMARY:Justin and Ashley's Wedding Dinner
-DTSTAMP:20240701T160840Z
+UID:OIuSSxGilYr0t9C7rjfUO
+SUMMARY:Ashley and Justin's Wedding Dinner
+DTSTAMP:20240709T014230Z
 DTSTART:20241121T210000Z
-DESCRIPTION:An intimate dinner with close friends and family. Please come d
-	ressed to impress. We will have a photographer on site to capture the memo
-	ries.
+DESCRIPTION:Please look at our website for more details like hotel block bo
+	oking link\, wedding attire\, and our registry.
 URL:https://jayandash.com
 LOCATION:Blue Atlas 1000 Carlisle Ave Unit 200\, Richmond\, VA 23231
 DURATION:PT4H
